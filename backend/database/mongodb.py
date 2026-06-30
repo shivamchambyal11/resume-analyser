@@ -1,11 +1,19 @@
 from pymongo import MongoClient
-import os
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-print(os.getenv("MONGO_URI"))
+client = MongoClient(
+    os.getenv("MONGO_URI"),
+    serverSelectionTimeoutMS=5000
+)
 
-client = MongoClient(os.getenv("MONGO_URI"))
+try:
+    client.admin.command("ping")
+    print("✅ MongoDB Connected")
+except Exception as e:
+    print("❌ MongoDB Error:")
+    print(e)
 
 db = client["resume_analyzer"]
